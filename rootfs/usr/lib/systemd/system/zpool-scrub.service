@@ -1,0 +1,13 @@
+[Unit]
+Description=Scrub Zpool
+Wants=zpool-scrub.timer
+Requires=zfs.target
+After=zfs.target
+
+[Service]
+Type=oneshot
+ExecStartPre=-/usr/sbin/zpool scrub -s storage
+ExecStart=/usr/sbin/zpool scrub storage
+
+[Install]
+WantedBy=multi-user.target
