@@ -15,6 +15,5 @@ systemctl enable zfs-scrub-monthly@storage.timer
 
 log "Allow NFS with selinux and firewalld"
 setsebool -P nfs_export_all_rw 1
-firewall-cmd --permanent --zone=FedoraServer --add-service=nfs
 
 log "Done managing services"
