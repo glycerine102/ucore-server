@@ -1,0 +1,70 @@
+{
+  "ignition": {
+    "version": "3.5.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "wheel",
+          "sudo"
+        ],
+        "name": "core",
+        "passwordHash": "$y$j9T$jqb.I.wwk1fbWO8auAVCW/$S4UZhgx9uwV7dzdkpW3GyO.c/u.jd0yaoyoGvQRMDF/",
+        "sshAuthorizedKeys": [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB7+MjFD59RF4Hd9hsyjrkcMQ6FqzzEPkGlNbtyS4tfv nathan@dorsey.cc"
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "path": "/etc/hostname",
+        "contents": {
+          "compression": "",
+          "source": "data:,tuxbox"
+        },
+        "mode": 420
+      },
+      {
+        "path": "/etc/zincati/config.d/90-disable-auto-updates.toml",
+        "contents": {
+          "compression": "",
+          "source": "data:,%5Bupdates%5D%0Aenabled%20%3D%20false%0A"
+        },
+        "mode": 420
+      },
+      {
+        "path": "/etc/systemd/system/rpm-ostree-countme.timer.d/40-weekly.conf",
+        "contents": {
+          "compression": "",
+          "source": "data:,%5BTimer%5D%0AOnCalendar%3Dweekly%0A"
+        },
+        "mode": 420
+      },
+      {
+        "path": "/etc/modules-load.d/zfs.conf",
+        "contents": {
+          "compression": "",
+          "source": "data:,zfs"
+        },
+        "mode": 420
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=Rebase to uCore\nWants=network-online.target\nAfter=network-online.target\nBefore=zincati.service\nConditionPathExists=!/var/lib/rpm-ostree-rebase-to-ucore.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/ublue-os/ucore-minimal:stable-zfs\nExecStart=/usr/bin/touch /var/lib/rpm-ostree-rebase-to-ucore.stamp\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "rpm-ostree-rebase-to-ucore.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Load ZFS kernel module\nDefaultDependencies=false\nAfter=systemd-modules-load.service\nBefore=zfs-mount.service\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/sbin/modprobe zfs\n\n[Install]\nWantedBy=sysinit.target\n",
+        "enabled": true,
+        "name": "zfs-load.service"
+      }
+    ]
+  }
+}
