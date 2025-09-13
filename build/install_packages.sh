@@ -33,6 +33,7 @@ system_packages=(
   "cargo"
   "htop"
   "mbuffer"
+  "neovim"
   "rust"
 )
 
