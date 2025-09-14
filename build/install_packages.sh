@@ -32,6 +32,7 @@ log "Begin installing packages"
 system_packages=(
   "cargo"
   "htop"
+  "lnav"
   "mbuffer"
   "neovim"
   "rust"
