@@ -16,4 +16,7 @@ systemctl enable zfs-scrub-monthly@storage.timer
 log "Allow NFS with selinux and firewalld"
 setsebool -P nfs_export_all_rw 1
 
+log "Disable some systemd services"
+systemctl disable coreos-oci-migration-motd.service
+
 log "Done managing services"
