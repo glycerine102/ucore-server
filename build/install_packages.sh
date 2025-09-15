@@ -26,25 +26,27 @@ for filename in "${FILENAMES[@]}"; do
     chmod 0755 "${TARGET_DIR}/$filename" || { echo "Failed to set permissions for $filename"; exit 1; }
 done
 
-
 log "Begin installing packages"
 
 system_packages=(
-  "cargo"
   "htop"
   "lnav"
   "mbuffer"
+)
+
+devops_packages=(
+  "cargo"
   "neovim"
   "rust"
 )
 
 networking_packages=(
-  "netbird"
-  "netbird-ui"
+  "netcat"
 )
 
 packages=(
   "${system_packages[@]}"
+  "${devops_packages[@]}"
   "${networking_packages[@]}"
 )
 
