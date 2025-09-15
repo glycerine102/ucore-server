@@ -10,8 +10,6 @@ log() {
 
 log "Ensure directories exist"
 mkdir -p /var/lib/alternatives
-mkdir /etc/netbird
-mkdir /var/log/netbird
 
 log "Load ZFS modules"
 echo zfs > /etc/modules-load.d/zfs.conf
