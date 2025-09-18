@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+FILESYSTEMS="storage/appdata storage/audiobooks storage/books storage/comics storage/database storage/documentaries storage/documents storage/exercise storage/learning storage/movies storage/music storage/photos storage/stand-up storage/television"
+SYNC_USER=root
+SYNC_HOST=backup.netbird.cloud
+LOG=/var/log/syncoid.log
+
+{
+  for i in $FILESYSTEMS; do
+    echo "---------------  $(date) - syncing $i -------------"
+    /usr/bin/syncoid \
+      --recursive \
+      --no-sync-snap \
+      --skip-parent \
+      --recvoptions="o compression=lz4" \
+      --create-bookmark \
+      --compress none \
+      --source-bwlimit 200M \
+      storage/"$i" \
+      $SYNC_USER@$SYNC_HOST:storage/"$i"
+    echo "---------------  $(date) - done $i -------------"
+  done
+} >> $LOG 2>&1
