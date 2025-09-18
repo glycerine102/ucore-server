@@ -18,4 +18,7 @@ log "Ensure the Alacritty terminal info is set up"
 curl -s -L 'https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info' >alacritty.info
 tic -xe alacritty,alacritty-direct alacritty.info && rm alacritty.info
 
+log "Change selinux to permissive mode"
+sed -i 's/enforcing/permissive/g' /etc/selinux/config
+
 log "Done managing files"
