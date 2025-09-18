@@ -7,7 +7,7 @@ ConditionFileNotEmpty=/etc/sanoid/sanoid.conf
 [Service]
 Environment=TZ=UTC
 Type=oneshot
-ExecStart=/usr/local/sbin/sanoid --prune-snapshots --verbose
+ExecStart=/usr/bin/sanoid --prune-snapshots --verbose
 
 [Install]
 WantedBy=sanoid.service
