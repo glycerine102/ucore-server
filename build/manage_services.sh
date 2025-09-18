@@ -12,6 +12,7 @@ log "Enable systemd services"
 systemctl enable nfs-server.service
 systemctl enable sshd.service
 systemctl enable zfs-scrub-monthly@storage.timer
+systemctl enable sanoid.timer
 systemctl enable cockpit.service
 
 log "Allow NFS with selinux"
