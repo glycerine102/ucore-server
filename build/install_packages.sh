@@ -10,21 +10,16 @@ log() {
 
 log "Install sanoid package"
 
-SANOID_URL="https://raw.githubusercontent.com/jimsalterjrs/sanoid/refs/tags/v2.3.0"
-TARGET_DIR="/usr/bin"
-FILENAMES=("sanoid" "syncoid" "findoid")
+log "Install sanoid package"
 
-# Loop over the filenames
-for filename in "${FILENAMES[@]}"; do
-    # Construct the full URL for each file
-    full_url="${SANOID_URL}/${filename}"
-    
-    # Download the file using curl
-    curl -s -o "${TARGET_DIR}/$filename" "$full_url" || { echo "Failed to download $full_url"; exit 1; }
-    
-    # Change file permissions
-    chmod 0755 "${TARGET_DIR}/$filename" || { echo "Failed to set permissions for $filename"; exit 1; }
-done
+SANOID_URL="https://github.com/decoyjoe/sanoid-portable/releases/download/2.2.0-2/sanoid-portable"
+SANOID_DIR="/usr/local/sbin"
+wget ${SANOID_URL} -O ${SANOID_DIR}/sanoid-portable
+chmod +x ${SANOID_DIR}/sanoid-portable
+sh ${SANOID_DIR}/sanoid-portable --assimilate
+ln -s ${SANOID_DIR}/sanoid-portable /usr/local/sbin/sanoid
+ln -s ${SANOID_DIR}/sanoid-portable /usr/local/sbin/syncoid
+ln -s ${SANOID_DIR}/sanoid-portable /usr/local/sbin/findoid
 
 log "Begin installing packages"
 
