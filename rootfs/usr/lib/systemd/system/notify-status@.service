@@ -1,0 +1,7 @@
+[Unit]
+Description=Reports Systemd Errors
+ConditionPathExists = /etc/systemd/system/notify-status.env
+
+[Service]
+Type=OneShot
+ExecStart=/usr/bin/notify-systemd-status %i

@@ -1,0 +1,16 @@
+#!/bin/bash
+UNIT=$1
+HOST="$HOSTNAME"
+MESSAGE="$UNIT failed on $HOST"
+TOKEN="$NTFY_TOKEN"
+URL="$NTFY_URL"
+
+systemctl status --full "$UNIT" | /usr/bin/curl \
+-fsS -m 10 \
+--retry 5 \
+-o /dev/null \
+-H "Authorization: Bearer $TOKEN" \
+-H "X-Tags: zfs,kube,backup,fileserver,cron" \
+-H "X-Title: ZFS Replication Failure" \
+-d "$MESSAGE" \
+"$URL"
