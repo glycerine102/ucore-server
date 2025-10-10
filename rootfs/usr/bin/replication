@@ -4,7 +4,7 @@ MAIN_FILESYSTEMS="audiobooks books comics documentaries documents exercise learn
 RECURISVE_FILESYSTEMS="appdata database"
 SYNC_USER=root
 SYNC_HOST=backup.netbird.cloud
-LOG=/var/log/syncoid.log
+LOG=/var/log/syncoid/syncoid.log
 
 {
   for i in $MAIN_FILESYSTEMS; do
