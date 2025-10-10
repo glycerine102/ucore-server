@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-MAIN_FILESYSTEMS="storage/audiobooks storage/books storage/comics storage/documentaries storage/documents storage/exercise storage/learning storage/movies storage/music storage/photos storage/stand-up storage/television"
-RECURISVE_FILESYSTEMS="storage/appdata storage/database"
+MAIN_FILESYSTEMS="audiobooks books comics documentaries documents exercise learning movies music photos stand-up television"
+RECURISVE_FILESYSTEMS="appdata database"
 SYNC_USER=root
 SYNC_HOST=backup.netbird.cloud
 LOG=/var/log/syncoid.log
