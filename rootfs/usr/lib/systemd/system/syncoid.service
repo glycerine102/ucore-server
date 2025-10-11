@@ -9,4 +9,3 @@ Type=oneshot
 ExecStart=/usr/bin/replication
 User=core
 Group=core
-
