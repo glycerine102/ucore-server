@@ -4,4 +4,5 @@ ConditionPathExists = /etc/systemd/system/notify-status.env
 
 [Service]
 Type=OneShot
+EnvironmentFile=/etc/systemd/system/notify-status.env
 ExecStart=/usr/bin/notify-systemd-status %i
