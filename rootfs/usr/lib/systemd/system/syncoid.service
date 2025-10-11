@@ -7,5 +7,6 @@ OnFailure=notify-status@%n.service
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/replication
-User=root
-Group=root
+User=core
+Group=core
+
