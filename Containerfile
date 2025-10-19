@@ -1,5 +1,5 @@
 ARG SOURCE_IMAGE="ucore"
-ARG SOURCE_TAG="stable-zfs-20251005"
+ARG SOURCE_TAG="stable-zfs-20251019"
 
 FROM scratch AS ctx
 COPY build /
