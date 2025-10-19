@@ -4,6 +4,7 @@ MAIN_FILESYSTEMS="audiobooks books comics documentaries documents exercise learn
 RECURISVE_FILESYSTEMS="appdata database"
 SYNC_USER=root
 SYNC_HOST=backup.netbird.cloud
+SYNC_LIMIT=200m
 LOG=/var/log/syncoid/syncoid.log
 
 {
@@ -14,7 +15,7 @@ LOG=/var/log/syncoid/syncoid.log
       --recvoptions="o compression=lz4" \
       --create-bookmark \
       --compress none \
-      --source-bwlimit 200m \
+      --source-bwlimit $SYNC_LIMIT \
       storage/"$i" \
       $SYNC_USER@$SYNC_HOST:storage/"$i"
     echo "---------------  $(date) - done $i -------------"
@@ -31,7 +32,7 @@ LOG=/var/log/syncoid/syncoid.log
       --recvoptions="o compression=lz4" \
       --create-bookmark \
       --compress none \
-      --source-bwlimit 200m \
+      --source-bwlimit $SYNC_LIMIT \
       storage/"$i" \
       $SYNC_USER@$SYNC_HOST:storage/"$i"
     echo "---------------  $(date) - done $i -------------"
