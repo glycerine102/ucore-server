@@ -14,6 +14,7 @@ LOG=/var/log/syncoid/syncoid.log
       --no-sync-snap \
       --recvoptions="o compression=lz4" \
       --create-bookmark \
+      --delete-target-snapshots \
       --compress none \
       --source-bwlimit $SYNC_LIMIT \
       storage/"$i" \
@@ -31,6 +32,7 @@ LOG=/var/log/syncoid/syncoid.log
       --skip-parent \
       --recvoptions="o compression=lz4" \
       --create-bookmark \
+      --delete-target-snapshots \
       --compress none \
       --source-bwlimit $SYNC_LIMIT \
       storage/"$i" \
