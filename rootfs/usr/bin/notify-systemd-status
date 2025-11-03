@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 UNIT=$1
 HOST="$HOSTNAME"
 MESSAGE="$UNIT failed on $HOST"
