@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Define the target directory
+TARGET_DIR="/etc/containers/systemd"
+
+# Change into the target directory
+cd "$TARGET_DIR" || {
+    echo "Failed to change directory to $TARGET_DIR"
+    exit 1
+}
+
+# Perform a git pull to update the repository
+git pull || {
+    echo "Failed to pull latest changes from git repository"
+    exit 1
+}
+
+# Reload systemd manager configuration
+sudo systemctl daemon-reload || {
+    echo "Failed to reload systemd manager configuration"
+    exit 1
+}
