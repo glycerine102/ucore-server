@@ -18,8 +18,4 @@ systemctl enable cockpit.service
 log "Allow NFS with selinux"
 setsebool -P nfs_export_all_rw 1
 
-log "Disable some systemd services"
-systemctl disable coreos-oci-migration-motd.service
-systemctl disable coreos-container-signing-migration-motd.service
-
 log "Done managing services"
