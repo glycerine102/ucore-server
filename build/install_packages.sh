@@ -18,6 +18,7 @@ system_packages=(
 
 devops_packages=(
   "cargo"
+  "fd-find"
   "neovim"
   "rust"
 )
