@@ -24,6 +24,7 @@ devops_packages=(
 )
 
 networking_packages=(
+  "iperf3"
   "netcat"
 )
 
