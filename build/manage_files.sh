@@ -21,4 +21,7 @@ tic -xe alacritty,alacritty-direct alacritty.info && rm alacritty.info
 log "Change selinux to permissive mode"
 sed -i 's/enforcing/permissive/g' /etc/selinux/config
 
+log "Create a symlink so Docker points to Podman"
+sudo ln -sf /usr/bin/podman /usr/bin/docker
+
 log "Done managing files"
