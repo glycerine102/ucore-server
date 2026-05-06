@@ -46,6 +46,12 @@ jobs:
           images: |
             ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
 
+          tags: |
+            type=schedule,pattern={{date 'YYYY-MM-DD'}}
+            type=schedule,pattern=latest
+            type=semver,pattern={{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+
           labels: |
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/${{ github.repository }}/main/README.md
             org.opencontainers.image.description=${{ env.IMAGE_DESCRIPTION }}
