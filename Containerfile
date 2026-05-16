@@ -17,5 +17,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/manage_files.sh && \
     /ctx/remove_packages.sh && \
     /ctx/install_packages.sh && \
+    /ctx/configure_network.sh && \
     /ctx/manage_services.sh && \
     /ctx/cleanup_image.sh
