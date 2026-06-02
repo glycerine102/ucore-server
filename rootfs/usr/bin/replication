@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MAIN_FILESYSTEMS="audiobooks books comics documentaries documents exercise learning movies music photos stand-up television"
-RECURISVE_FILESYSTEMS="appdata database"
+RECURISVE_FILESYSTEMS="appdata"
 SYNC_USER=root
 SYNC_HOST=backup.netbird.cloud
 SYNC_LIMIT=200m
