@@ -3,7 +3,7 @@ Description=Run Syncoid Replication
 
 [Timer]
 Unit=syncoid.service
-OnCalendar=*-*-* 22:00:00 America/New_York
+OnCalendar=*-*-3..31 22:00:00 America/New_York
 
 [Install]
 WantedBy=timers.target
