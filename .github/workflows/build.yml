@@ -79,7 +79,7 @@ jobs:
 
       # Push image using buildah
       - name: Push Image to GHCR
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         id: push
         env:
           IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
