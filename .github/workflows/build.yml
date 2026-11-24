@@ -3,7 +3,7 @@ name: build-ublue-custom
 on:
   push:
     tags:
-      - v4[0-9].[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+
     paths-ignore:
       - "**/README.md"
   schedule:
