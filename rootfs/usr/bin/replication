@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-
 set -Eeuo pipefail
 
-# Use the destination's user and IP address or hostname.
 DEST="root@backup.netbird.cloud"
 
 SSH=(
@@ -13,13 +11,34 @@ SSH=(
     -o ServerAliveCountMax=3
 )
 
-DATASETS="audiobooks books comics documentaries documents exercise learning movies music photos stand-up television"
-SYNC_LIMIT=4000k
-LOG=/var/log/syncoid/syncoid.log
+DATASETS=(
+    audiobooks
+    books
+    comics
+    documentaries
+    exercise
+    learning
+    movies
+    music
+    photos
+    stand-up
+    television
+)
+
+SYNC_LIMIT="4000k"
+LOG="/var/log/syncoid/syncoid.log"
 
 # Prevent overlapping executions of this wrapper.
 exec 9>/run/lock/jellyfin-replication.lock
 flock -n 9 || exit 0
+
+# Prepare logging before stopping Jellyfin.
+mkdir -p "$(dirname "$LOG")"
+exec >>"$LOG" 2>&1
+
+log() {
+    printf '[%s] %s\n' "$(date -Is)" "$*"
+}
 
 restart_needed=0
 
@@ -28,15 +47,16 @@ cleanup() {
     trap - EXIT
 
     if (( restart_needed )); then
-        echo "Starting destination Jellyfin..."
+        log "Starting destination Jellyfin..."
 
         if ! "${SSH[@]}" "$DEST" \
             'systemctl start jellyfin.service'; then
-            echo "ERROR: Could not restart destination Jellyfin." >&2
+            log "ERROR: Could not restart destination Jellyfin."
             rc=1
         fi
     fi
 
+    log "Replication job finished with exit status $rc."
     exit "$rc"
 }
 
@@ -47,24 +67,23 @@ trap 'exit 143' TERM
 # Arm cleanup before stopping, in case SSH disconnects after the stop.
 restart_needed=1
 
-echo "Stopping destination Jellyfin..."
+log "Stopping destination Jellyfin..."
 "${SSH[@]}" "$DEST" \
     'systemctl stop jellyfin.service'
 
-echo "Replicating media..."
+for dataset in "${DATASETS[@]}"; do
+    log "Syncing storage/$dataset..."
 
-# Existing working syncoid command and options.
-{
-  for i in $DATASETS; do
-    echo "---------------  $(date) - syncing $i -------------"
     /usr/sbin/syncoid \
-      --no-sync-snap \
-      --recvoptions="o compression=zstd" \
-      --create-bookmark \
-      --compress none \
-      --source-bwlimit $SYNC_LIMIT \
-      storage/"$i" \
-      $DEST:storage/"$i"
-    echo "---------------  $(date) - done $i -------------"
-  done
-} >> $LOG 2>&1
+        --no-sync-snap \
+        --recvoptions="o compression=zstd" \
+        --create-bookmark \
+        --compress=none \
+        --source-bwlimit="$SYNC_LIMIT" \
+        "storage/$dataset" \
+        "${DEST}:storage/$dataset"
+
+    log "Finished storage/$dataset."
+done
+
+# The EXIT trap starts Jellyfin.
