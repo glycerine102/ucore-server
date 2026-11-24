@@ -1,11 +1,13 @@
 [Unit]
 Description=ZFS Replication With Syncoid
 Requires=zfs.target
-After=zfs.target
-OnFailure=notify-status@%n.service
+Wants=network-online.target
+After=zfs.target network-online.target
 
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/replication
 User=core
 Group=core
+RuntimeDirectory=syncoid
+LogsDirectory=syncoid

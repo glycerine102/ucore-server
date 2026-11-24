@@ -25,11 +25,11 @@ DATASETS=(
     television
 )
 
-SYNC_LIMIT="4000k"
+SYNC_LIMIT="4600000"
 LOG="/var/log/syncoid/syncoid.log"
 
 # Prevent overlapping executions of this wrapper.
-exec 9>/run/lock/jellyfin-replication.lock
+exec 9>/run/syncoid/replication.lock
 flock -n 9 || exit 0
 
 # Prepare logging before stopping Jellyfin.
