@@ -1,17 +1,41 @@
 #!/usr/bin/env bash
 
-UNIT=$1
-HOST="$HOSTNAME"
-MESSAGE="$UNIT failed on $HOST"
-TOKEN="$NTFY_TOKEN"
-URL="$NTFY_URL"
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
-systemctl status --full "$UNIT" | /usr/bin/curl \
--fsS -m 10 \
---retry 5 \
--o /dev/null \
--H "Authorization: Bearer $TOKEN" \
--H "X-Tags: zfs,kube,backup,fileserver,cron" \
--H "X-Title: ZFS Replication Failure" \
--d "$MESSAGE" \
-"$URL"
+UNIT="${1:?Usage: ntfy-unit-failure UNIT}"
+: "${NTFY_URL:?NTFY_URL must be configured}"
+
+AUTH=()
+if [[ -n "${NTFY_TOKEN:-}" ]]; then
+    AUTH=(-H "Authorization: Bearer ${NTFY_TOKEN}")
+fi
+
+# Query properties rather than requiring a particular version's
+# MONITOR_* environment variables.
+DETAILS="$(
+    systemctl show "$UNIT" \
+        --property=Result \
+        --property=ExecMainCode \
+        --property=ExecMainStatus
+)"
+
+printf -v MESSAGE \
+    'Host: %s\nUnit: %s\n\n%s\n\nReplication log: /var/log/syncoid/syncoid.log\nInspect service: journalctl -u %s' \
+    "$(hostname)" \
+    "$UNIT" \
+    "$DETAILS" \
+    "$UNIT"
+
+curl \
+    --fail \
+    --silent \
+    --show-error \
+    --connect-timeout 10 \
+    --max-time 30 \
+    "${AUTH[@]}" \
+    -H "Title: Service failure on $(hostname)" \
+    -H "Priority: high" \
+    --data-binary "$MESSAGE" \
+    "$NTFY_URL" \
+    >/dev/null
