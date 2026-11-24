@@ -1,42 +1,70 @@
 #!/usr/bin/env bash
 
-MAIN_FILESYSTEMS="audiobooks books comics documentaries documents exercise learning movies music photos stand-up television"
-RECURISVE_FILESYSTEMS="appdata"
-SYNC_USER=root
-SYNC_HOST=backup.netbird.cloud
+set -Eeuo pipefail
+
+# Use the destination's user and IP address or hostname.
+DEST="root@backup.netbird.cloud"
+
+SSH=(
+    ssh
+    -o BatchMode=yes
+    -o ConnectTimeout=15
+    -o ServerAliveInterval=30
+    -o ServerAliveCountMax=3
+)
+
+DATASETS="audiobooks books comics documentaries documents exercise learning movies music photos stand-up television"
 SYNC_LIMIT=4000k
 LOG=/var/log/syncoid/syncoid.log
 
-{
-  for i in $MAIN_FILESYSTEMS; do
-    echo "---------------  $(date) - syncing $i -------------"
-    /usr/sbin/syncoid \
-      --no-sync-snap \
-      --recvoptions="o compression=lz4" \
-      --create-bookmark \
-      --delete-target-snapshots \
-      --compress none \
-      --source-bwlimit $SYNC_LIMIT \
-      storage/"$i" \
-      $SYNC_USER@$SYNC_HOST:storage/"$i"
-    echo "---------------  $(date) - done $i -------------"
-  done
-} >> $LOG 2>&1
+# Prevent overlapping executions of this wrapper.
+exec 9>/run/lock/jellyfin-replication.lock
+flock -n 9 || exit 0
 
+restart_needed=0
+
+cleanup() {
+    local rc=$?
+    trap - EXIT
+
+    if (( restart_needed )); then
+        echo "Starting destination Jellyfin..."
+
+        if ! "${SSH[@]}" "$DEST" \
+            'systemctl start jellyfin.service'; then
+            echo "ERROR: Could not restart destination Jellyfin." >&2
+            rc=1
+        fi
+    fi
+
+    exit "$rc"
+}
+
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+# Arm cleanup before stopping, in case SSH disconnects after the stop.
+restart_needed=1
+
+echo "Stopping destination Jellyfin..."
+"${SSH[@]}" "$DEST" \
+    'systemctl stop jellyfin.service'
+
+echo "Replicating media..."
+
+# Existing working syncoid command and options.
 {
-  for i in $RECURISVE_FILESYSTEMS; do
+  for i in $DATASETS; do
     echo "---------------  $(date) - syncing $i -------------"
     /usr/sbin/syncoid \
-      --recursive \
       --no-sync-snap \
-      --skip-parent \
-      --recvoptions="o compression=lz4" \
+      --recvoptions="o compression=zstd" \
       --create-bookmark \
-      --delete-target-snapshots \
       --compress none \
       --source-bwlimit $SYNC_LIMIT \
       storage/"$i" \
-      $SYNC_USER@$SYNC_HOST:storage/"$i"
+      $DEST:storage/"$i"
     echo "---------------  $(date) - done $i -------------"
   done
 } >> $LOG 2>&1
