@@ -19,3 +19,5 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/install_packages.sh && \
     /ctx/manage_services.sh && \
     /ctx/cleanup_image.sh
+
+RUN bootc container lint
