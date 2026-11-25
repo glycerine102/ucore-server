@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-
-#!/usr/bin/env bash
 set -Eeuo pipefail
 
 UNIT="${1:?Usage: ntfy-unit-failure UNIT}"
