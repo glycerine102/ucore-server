@@ -1,6 +1,5 @@
 [Unit]
 Description=Send ntfy failure notification for %i
-ConditionPathExists=/etc/default/notify-status.env
 Wants=network-online.target
 After=network-online.target
 
@@ -10,3 +9,4 @@ User=core
 Group=core
 EnvironmentFile=/etc/default/notify-status.env
 ExecStart=/usr/bin/notify-systemd-status %i
+TimeoutStartSec=45s
