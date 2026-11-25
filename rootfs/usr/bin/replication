@@ -26,15 +26,10 @@ DATASETS=(
 )
 
 SYNC_LIMIT="4600000"
-LOG="/var/log/syncoid/syncoid.log"
 
 # Prevent overlapping executions of this wrapper.
 exec 9>/run/syncoid/replication.lock
 flock -n 9 || exit 0
-
-# Prepare logging before stopping Jellyfin.
-mkdir -p "$(dirname "$LOG")"
-exec >>"$LOG" 2>&1
 
 log() {
     printf '[%s] %s\n' "$(date -Is)" "$*"

@@ -11,4 +11,5 @@ ExecStart=/usr/bin/replication
 User=core
 Group=core
 RuntimeDirectory=syncoid
-LogsDirectory=syncoid
+StandardOutput=journal
+StandardError=journal

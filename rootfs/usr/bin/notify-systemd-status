@@ -19,7 +19,7 @@ DETAILS="$(
 )"
 
 printf -v MESSAGE \
-    'Host: %s\nUnit: %s\n\n%s\n\nReplication log: /var/log/syncoid/syncoid.log\nInspect service: journalctl -u %s' \
+    'Host: %s\nUnit: %s\n\n%s\n\nInspect logs:\njournalctl -u %s -n 100 --no-pager' \
     "$(hostname)" \
     "$UNIT" \
     "$DETAILS" \
