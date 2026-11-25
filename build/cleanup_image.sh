@@ -16,8 +16,15 @@ dnf5 clean all
 rm -rf /tmp/*
 
 # Clean /var directory while preserving essential files
-find /var/* -maxdepth 0 -type d \! -name cache -exec rm -fr {} \;
-find /var/cache/* -maxdepth 0 -type d \! -name libdnf5 \! -name rpm-ostree -exec rm -fr {} \;
+find /var/* -maxdepth 0 -type d \
+    ! -name cache \
+    ! -name log \
+    -exec rm -rf -- {} +
+
+find /var/cache/* -maxdepth 0 -type d \
+    ! -name libdnf5 \
+    ! -name rpm-ostree \
+    -exec rm -rf -- {} +
 
 # Restore and setup directories
 mkdir -p /var/tmp
